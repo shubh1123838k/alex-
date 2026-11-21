@@ -1,0 +1,8 @@
+{
+  "name": "Developer Portfolio",
+  "description": "Full-stack software engineer and AI developer portfolio showcasing experience, selected projects, technical stack, certifications, and contact channels.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
