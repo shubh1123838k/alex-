@@ -2,7 +2,10 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
-import {defineConfig} from 'vite';
+import { fileURLToPath } from 'url';
+import { defineConfig } from 'vite';
+
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(() => {
   return {
@@ -19,11 +22,11 @@ export default defineConfig(() => {
           if (error) {
             return;
           }
-          const distDir = path.resolve(__dirname, 'dist');
-          const srcAssets = path.resolve(__dirname, 'src/assets');
+          const distDir = path.resolve(rootDir, 'dist');
+          const srcAssets = path.resolve(rootDir, 'src/assets');
           const distAssets = path.resolve(distDir, 'src/assets');
           if (fs.existsSync(distDir) && fs.existsSync(srcAssets)) {
-            fs.cpSync(srcAssets, distAssets, {recursive: true, force: true});
+            fs.cpSync(srcAssets, distAssets, { recursive: true, force: true });
           }
         },
       },
@@ -31,7 +34,24 @@ export default defineConfig(() => {
     resolve: {
       dedupe: ['react', 'react-dom'],
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': rootDir,
+      },
+    },
+    build: {
+      rolldownOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules/motion')) {
+              return 'vendor-motion';
+            }
+            if (id.includes('node_modules/lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('node_modules/react')) {
+              return 'vendor-react';
+            }
+          },
+        },
       },
     },
     server: {
